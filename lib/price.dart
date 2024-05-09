@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class PriceFilter extends StatefulWidget {
+  const PriceFilter({super.key});
+
   @override
-  _PriceFilterState createState() => _PriceFilterState();
+  State<PriceFilter> createState() => _PriceFilterState();
 }
 
 class _PriceFilterState extends State<PriceFilter> {
