@@ -1,14 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WorkExperienceFilter extends StatefulWidget {
-  const WorkExperienceFilter({super.key});
+  final double workExperienceRange;
+  final void Function(double) onWorkExperienceChanged;
+
+  const WorkExperienceFilter({
+    super.key,
+    required this.workExperienceRange,
+    required this.onWorkExperienceChanged,
+  });
 
   @override
   State<WorkExperienceFilter> createState() => _WorkExperienceFilterState();
 }
 
 class _WorkExperienceFilterState extends State<WorkExperienceFilter> {
-  double _workExperienceRange = 0.0;
+  late double _workExperienceRange;
+
+  @override
+  void initState() {
+    super.initState();
+    _workExperienceRange = widget.workExperienceRange;
+  }
+
+  _loadWorkExperienceRange() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _workExperienceRange = prefs.getDouble('workExperienceRange') ?? 0.0;
+    });
+  }
+
+  _saveWorkExperienceRange(double value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('workExperienceRange', value);
+    widget.onWorkExperienceChanged(value); // Call the callback function with the new value
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +51,7 @@ class _WorkExperienceFilterState extends State<WorkExperienceFilter> {
               Text('Max : 30+'),
             ],
           ),
-
           Text('Experience : ${_workExperienceRange.round()} Year'),
-
           SliderTheme(
             data: SliderThemeData(
               activeTrackColor: Colors.blue,
@@ -43,6 +68,7 @@ class _WorkExperienceFilterState extends State<WorkExperienceFilter> {
               onChanged: (value) {
                 setState(() {
                   _workExperienceRange = value;
+                  _saveWorkExperienceRange(value); // Save the value
                 });
               },
             ),
