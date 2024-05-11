@@ -224,31 +224,7 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
   }
 
 
-  void _applyFilter() {
-    // Get selected filters
-    final selectedFilters = categorySelections.entries
-        .where((entry) => entry.value)
-        .map((entry) => entry.key)
-        .toList();
 
-    // Get selected price
-    final selectedPrice = _currentValue;
-
-    // Get selected work experience
-    final selectedWorkExperience = _workExperienceRange.round();
-
-    // Navigate to the new screen and pass selected data
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NextScreen(
-          selectedFilters: selectedFilters,
-          selectedPrice: selectedPrice,
-          selectedWorkExperience: selectedWorkExperience,
-        ),
-      ),
-    );
-  }
 
 
   @override
@@ -281,7 +257,6 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50))),
                   onPressed: () {
-                    _applyFilter();
                   },
                   child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -502,39 +477,3 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
 }
 
 
-class NextScreen extends StatelessWidget {
-  final List<String> selectedFilters;
-  final double selectedPrice;
-  final int selectedWorkExperience;
-
-  const NextScreen({super.key,
-    required this.selectedFilters,
-    required this.selectedPrice,
-    required this.selectedWorkExperience,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Selected Filters'),
-      ),
-      body: ListView(
-        children: [
-          ListTile(
-            title: const Text('Selected Filters'),
-            subtitle: Text(selectedFilters.join(', ')),
-          ),
-          ListTile(
-            title: const Text('Selected Price'),
-            subtitle: Text(selectedPrice.toString()),
-          ),
-          ListTile(
-            title: const Text('Selected Work Experience'),
-            subtitle: Text(selectedWorkExperience.toString()),
-          ),
-        ],
-      ),
-    );
-  }
-}
