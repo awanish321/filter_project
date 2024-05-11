@@ -25,7 +25,7 @@ class _WorkExperienceFilterState extends State<WorkExperienceFilter> {
             ],
           ),
 
-          Text('Max : ${_workExperienceRange.round()} Year'),
+          Text('Experience : ${_workExperienceRange.round()} Year'),
 
           SliderTheme(
             data: SliderThemeData(
