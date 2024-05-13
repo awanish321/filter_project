@@ -33,10 +33,7 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
     'Skills': [],
     'Companies': [],
     'Location': [
-      'Agra',
-      'Ahmedabad',
-      'Ajmer',
-      'Akola',
+      'Agra', 'Ahmedabad', 'Ajmer', 'Akola',
       'Aligarh',
       'Allahabad',
       'Amritsar',
@@ -149,6 +146,18 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
   double _currentPriceSliderValue = 0;
   double _currentWorkExperienceRange = 4;
 
+
+  List<String> selectedCategory = [];
+  List<String> selectedRole = [];
+  List<String> selectedSkills = [];
+  List<String> selectedCompanies = [];
+  String selectedLocation = '';
+  double selectedPrice = 0;
+  double selectedWorkExperience = 0;
+  List<String> selectedLanguage = [];
+  List<String> selectedAvailableDays = [];
+
+
   @override
   void initState() {
     super.initState();
@@ -185,24 +194,6 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
 
 
 }
-
-
-
-  // Future<void> _fetchCategoryFromFirestore() async {
-  //   try {
-  //     final categoryCollection =
-  //         await FirebaseFirestore.instance.collectionGroup('Category').get();
-  //     final category =
-  //         categoryCollection.docs.map((doc) => doc.get('name')).toList();
-  //     setState(() {
-  //       subcategories['Category'] = category.cast<String>();
-  //     });
-  //   } catch (e) {
-  //     if (kDebugMode) {
-  //       print("Error fetching category from Firestore: $e");
-  //     }
-  //   }
-  // }
 
 
   Future<void> _fetchCategoryFromFirestore() async {
@@ -372,39 +363,79 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
     });
   }
 
+
   void _applyFilter() {
-// Gather selected data for all categories
-    Map<String, dynamic> selectedData = {};
+    // Populate selected data based on user's selection
+    selectedCategory = selectedSubcategories['Category']!.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+    selectedRole = selectedSubcategories['Role']!.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+    selectedSkills = selectedSubcategories['Skills']!.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+    selectedCompanies = selectedSubcategories['Companies']!.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+    selectedLanguage = selectedSubcategories['Language']!.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+    selectedAvailableDays = selectedSubcategories['Available Days']!.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
 
-// Iterate through all categories
-    for (var category in categories) {
-      List<String> selectedSubcategoriesList = [];
+    // Set selected location
+    selectedLocation = filteredSubcategories.firstWhere(
+          (element) => categorySelections[element] == true,
+      orElse: () => '',
+    );
 
-// Add selected subcategories for the current category
-      selectedSubcategories[category]!.forEach((subcategory, isSelected) {
-        if (isSelected) {
-          selectedSubcategoriesList.add(subcategory);
-        }
-      });
+    // Set selected price
+    selectedPrice = _currentPriceSliderValue;
 
-// Add selected subcategories to the map
-      selectedData[category] = selectedSubcategoriesList;
-    }
+    // Set selected work experience
+    selectedWorkExperience = _currentWorkExperienceRange;
 
-// Add price value if applicable
-    selectedData['Price'] = _currentPriceSliderValue;
+    // Pass selected data to the next screen
+    Map<String, dynamic> selectedData = {
+      'Category': selectedCategory,
+      'Role': selectedRole,
+      'Skills': selectedSkills,
+      'Companies': selectedCompanies,
+      'Location': selectedLocation,
+      'Price': selectedPrice,
+      'Work Experience': selectedWorkExperience,
+      'Language': selectedLanguage,
+      'Available Days': selectedAvailableDays,
+    };
 
-// Add work experience value if applicable
-    selectedData['Work Experience'] = _currentWorkExperienceRange;
-
-// Navigate to another screen and pass the data
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => FilteredDataScreen(selectedData: selectedData),
+        builder: (context) => FilteredDataScreen(
+          selectedData: selectedData,
+          selectedCategory: selectedCategory,
+          selectedRole: selectedRole,
+          selectedSkills: selectedSkills,
+          selectedCompanies: selectedCompanies,
+          selectedLocation: selectedLocation,
+          selectedPrice: selectedPrice,
+          selectedWorkExperience: selectedWorkExperience,
+          selectedLanguage: selectedLanguage,
+          selectedAvailableDays: selectedAvailableDays,
+        ),
       ),
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -436,7 +467,8 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50))),
                   onPressed: () {
-                    _applyFilter();
+                    _applyFilter(
+                    );
                   },
                   child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -666,3 +698,7 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
     super.dispose();
   }
 }
+
+
+
+

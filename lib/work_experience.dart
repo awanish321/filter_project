@@ -90,10 +90,10 @@ class WorkExperienceFilter extends StatefulWidget {
   final void Function(double) onWorkExperienceChanged;
 
   const WorkExperienceFilter({
-    Key? key,
+    super.key,
     required this.workExperienceRange,
     required this.onWorkExperienceChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<WorkExperienceFilter> createState() => _WorkExperienceFilterState();
