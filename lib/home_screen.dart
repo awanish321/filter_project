@@ -3,7 +3,6 @@ import 'package:filter/price.dart';
 import 'package:filter/work_experience.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'filtered_values.dart';
 
 class CategoryFilterScreen extends StatefulWidget {
@@ -26,12 +25,30 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
     'Available Days'
   ];
 
+
   Map<String, List<String>> subcategories = {
     'Category' : [],
     'Role': [],
     'Skills': [],
     'Companies': [],
-    'Location': [],
+    'Location': [
+      'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Ahmedabad', 'Chennai', 'Kolkata',
+      'Surat', 'Pune', 'Jaipur', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Thane',
+      'Bhopal', 'Visakhapatnam', 'Pimpri-Chinchwad', 'Patna', 'Vadodara', 'Ghaziabad',
+      'Ludhiana', 'Agra', 'Nashik', 'Faridabad', 'Meerut', 'Rajkot', 'Kalyan-Dombivli',
+      'Vasai-Virar', 'Varanasi', 'Srinagar', 'Aurangabad', 'Dhanbad', 'Amritsar',
+      'Navi Mumbai', 'Allahabad', 'Ranchi', 'Howrah', 'Jabalpur', 'Gwalior', 'Vijayawada',
+      'Jodhpur', 'Raipur', 'Kota', 'Guwahati', 'Chandigarh', 'Hubli-Dharwad', 'Amroha',
+      'Moradabad', 'Gurgaon', 'Aligarh', 'Solapur', 'Ranchi', 'Jalandhar', 'Tiruchirappalli',
+      'Bhubaneswar', 'Salem', 'Warangal', 'Mira-Bhayandar', 'Thiruvananthapuram', 'Bhiwandi',
+      'Saharanpur', 'Guntur', 'Amravati', 'Bikaner', 'Noida', 'Jamshedpur', 'Bhilai Nagar',
+      'Cuttack', 'Firozabad', 'Kochi', 'Nellore', 'Bhavnagar', 'Dehradun', 'Durgapur',
+      'Asansol', 'Rourkela', 'Nanded', 'Kolhapur', 'Ajmer', 'Akola', 'Udaipur',
+      'Amravati', 'Nanded-Waghala', 'Yol', 'Belgaum', 'Gulbarga', 'Jamnagar', 'Ujjain',
+      'Loni', 'Siliguri', 'Jhansi', 'Ulhasnagar', 'Jammu', 'Sangli', 'Mangalore',
+      'Erode', 'Mirzapur-Cum-Vindhyachal', 'Kozhikode', 'Kolkata', 'Malappuram', 'Mehsana',
+      'Rajahmundry', 'Brahmapur', 'Ahmedabad', 'Delhi', 'Pune', 'Srinagar'
+    ],
     'Price': [],
     'Work Experience': [],
     'Language': [
@@ -67,6 +84,7 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
   double _currentPriceSliderValue = 0;
   double _currentWorkExperienceRange = 0;
 
+
   @override
   void initState() {
     super.initState();
@@ -74,7 +92,7 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
     _fetchRolesFromFirestore();
     _fetchSkillsFromFirestore();
     // _fetchCompanyFromFirestore();
-    _fetchLocationFromFirestore();
+    // _fetchLocationFromFirestore();
     _fetchCategoryFromFirestore();
     fetchCompanyData();
 
@@ -173,22 +191,22 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
   }
 
 
-  Future<void> _fetchLocationFromFirestore() async {
-    try {
-      final locationCollection =
-      await FirebaseFirestore.instance.collection('Location').get();
-      final location =
-      locationCollection.docs.map((doc) => doc.get('location')).toList();
-      setState(() {
-        subcategories['Location'] =
-            location.cast<String>();
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching roles from Firestore: $e');
-      }
-    }
-  }
+  // Future<void> _fetchLocationFromFirestore() async {
+  //   try {
+  //     final locationCollection =
+  //     await FirebaseFirestore.instance.collection('Location').get();
+  //     final location =
+  //     locationCollection.docs.map((doc) => doc.get('location')).toList();
+  //     setState(() {
+  //       subcategories['Location'] =
+  //           location.cast<String>();
+  //     });
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print('Error fetching roles from Firestore: $e');
+  //     }
+  //   }
+  // }
 
   void _clearFilters() {
     setState(() {
@@ -202,23 +220,6 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
       _currentWorkExperienceRange = 0;
     });
   }
-
-
-  // void _clearSubcategories() {
-  //   setState(() {
-  //     _searchController.clear();
-  //     if (currentCategory.isNotEmpty) {
-  //       // Clear only selected subcategories of the current category
-  //       selectedSubcategories[currentCategory]!
-  //           .updateAll((key, value) => false);
-  //     } else {
-  //       // Clear all subcategory selections
-  //       for (var category in categories) {
-  //         selectedSubcategories[category]!.updateAll((key, value) => false);
-  //       }
-  //     }
-  //   });
-  // }
 
   void _clearSubcategories() {
     setState(() {
@@ -522,23 +523,24 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
                             itemBuilder: (context, index) {
                               final subcategory =
                               filteredSubcategories[index];
+                              bool isChecked = categorySelections[subcategory] ?? false;
                               return Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.start,
                                 children: [
                                   Checkbox(
-
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                     autofocus: true,
-                                    value: categorySelections[
-                                    subcategory] ??
-                                        false,
+                                    splashRadius: null,
+                                    value: categorySelections[subcategory] ?? false,
                                     onChanged: (value) {
                                       setState(() {
-                                        categorySelections[
-                                        subcategory] = value!;
+                                        categorySelections[subcategory] = value ?? false;
                                       });
                                     },
                                   ),
+
+
                                   Expanded(child: Text(subcategory)),
                                 ],
                               );
@@ -563,5 +565,6 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
     super.dispose();
   }
 }
+
 
 
