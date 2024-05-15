@@ -8,7 +8,18 @@ import 'package:flutter/material.dart';
 import 'filtered_values.dart';
 
 class CategoryFilterScreen extends StatefulWidget {
-  const CategoryFilterScreen({super.key});
+  const CategoryFilterScreen({
+    super.key,
+    required List<String> selectedCategory,
+    required List<String> selectedRole,
+    required List<String> selectedSkills,
+    required List<String> selectedCompanies,
+    required List<String> selectedLocation,
+    required double selectedPrice,
+    required double selectedWorkExperience,
+    required List<String> selectedLanguage,
+    required List<String> selectedAvailableDays,
+  });
 
   @override
   State<CategoryFilterScreen> createState() => _CategoryFilterScreenState();
@@ -151,7 +162,8 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
   List<String> selectedRole = [];
   List<String> selectedSkills = [];
   List<String> selectedCompanies = [];
-  String selectedLocation = '';
+  List<String> selectedLocation = [];
+  // String selectedLocation = '';
   double selectedPrice = 0;
   double selectedWorkExperience = 0;
   List<String> selectedLanguage = [];
@@ -175,25 +187,25 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
 
 
   void  categoryFetch(){
-  // Initialize selections map for each category
-  for (var category in categories) {
-  selectedSubcategories[category] = {};
-  for (var subcategory in subcategories[category]!) {
-  selectedSubcategories[category]![subcategory] = false;
+    // Initialize selections map for each category
+    for (var category in categories) {
+      selectedSubcategories[category] = {};
+      for (var subcategory in subcategories[category]!) {
+        selectedSubcategories[category]![subcategory] = false;
+      }
+    }
+
+    print("categories.first..${categories}");
+
+    // Show subcategories for the first category automatically
+    _showSubcategories(categories.first);
+    setState(() {
+      currentCategory = categories[0];
+      isCategorySelected = true;
+    });
+
+
   }
-  }
-
-  print("categories.first..${categories}");
-
-  // Show subcategories for the first category automatically
-  _showSubcategories(categories.first);
-  setState(() {
-  currentCategory = categories[0];
-  isCategorySelected = true;
-  });
-
-
-}
 
 
   Future<void> _fetchCategoryFromFirestore() async {
@@ -204,7 +216,7 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
       categoryCollection.docs.map((doc) => doc.get('name')).toList();
       setState(() {
         subcategories['Category'] = category.cast<String>();
-        _showSubcategories('Category'); // Show subcategories for 'Category'
+        _showSubcategories('Category');
       });
     } catch (e) {
       if (kDebugMode) {
@@ -216,12 +228,12 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
   Future<void> fetchCompanyData() async {
     try {
       QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('Companies').get();
+      await FirebaseFirestore.instance.collection('Companies').get();
 
       List<String> companies = [];
       for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
         Map<String, dynamic>? documentData =
-            documentSnapshot.data() as Map<String, dynamic>?;
+        documentSnapshot.data() as Map<String, dynamic>?;
         if (documentData != null) {
           dynamic listData = documentData['company'] ?? [];
           if (listData is String) {
@@ -247,7 +259,7 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
   Future<void> _fetchRolesFromFirestore() async {
     try {
       final rolesCollection =
-          await FirebaseFirestore.instance.collection('Role').get();
+      await FirebaseFirestore.instance.collection('Role').get();
       final roles = rolesCollection.docs.map((doc) => doc.get('role')).toList();
       setState(() {
         subcategories['Role'] = roles.cast<String>();
@@ -262,9 +274,9 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
   Future<void> _fetchSkillsFromFirestore() async {
     try {
       final skillCollection =
-          await FirebaseFirestore.instance.collection('Skills').get();
+      await FirebaseFirestore.instance.collection('Skills').get();
       final skill =
-          skillCollection.docs.map((doc) => doc.get('skill')).toList();
+      skillCollection.docs.map((doc) => doc.get('skill')).toList();
       setState(() {
         subcategories['Skills'] = skill.cast<String>();
       });
@@ -287,33 +299,6 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
       _currentWorkExperienceRange = 4;
     });
   }
-
-//   void _clearSubcategories() {
-//     setState(() {
-//       _searchController.clear();
-//       if (currentCategory.isNotEmpty) {
-// // Clear only selected subcategories of the current category
-//         selectedSubcategories[currentCategory]!
-//             .updateAll((key, value) => false);
-//       } else {
-// // Clear all subcategory selections
-//         for (var category in categories) {
-//           selectedSubcategories[category]!.updateAll((key, value) => false);
-//         }
-//       }
-//
-// // Set price to zero if current category is "Price"
-//       if (currentCategory == "Price") {
-//         _currentPriceSliderValue = 0;
-//       }
-//
-// // Set work experience to zero if current category is "Work Experience"
-//       if (currentCategory == "Work Experience") {
-//         _currentWorkExperienceRange = 4;
-//       }
-//     });
-//   }
-
 
   void _clearSubcategories() {
     setState(() {
@@ -358,7 +343,7 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
     setState(() {
       filteredSubcategories = subcategories[currentCategory]!
           .where((subcategory) =>
-              subcategory.toLowerCase().contains(query.toLowerCase()))
+          subcategory.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
@@ -390,12 +375,11 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
         .where((entry) => entry.value)
         .map((entry) => entry.key)
         .toList();
+    selectedLocation = selectedSubcategories['Location']!.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
 
-    // Set selected location
-    selectedLocation = filteredSubcategories.firstWhere(
-          (element) => categorySelections[element] == true,
-      orElse: () => '',
-    );
 
     // Set selected price
     selectedPrice = _currentPriceSliderValue;
@@ -600,22 +584,22 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
                                 prefixIcon: const Icon(Icons.search),
                                 suffixIcon: _searchController.text.isNotEmpty
                                     ? IconButton(
-                                        icon: const Icon(Icons.clear),
-                                        onPressed: () {
-                                          _searchController.clear();
-                                          _filterSubcategories('');
-                                        },
-                                      )
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    _filterSubcategories('');
+                                  },
+                                )
                                     : null,
                                 border: OutlineInputBorder(
                                   borderSide:
-                                      const BorderSide(color: Colors.grey),
+                                  const BorderSide(color: Colors.grey),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 12,
                                     horizontal:
-                                        16), // Adjust content padding here
+                                    16), // Adjust content padding here
                               ),
                               onChanged: _filterSubcategories,
                             ),
@@ -626,59 +610,59 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
                         Expanded(
                           child: currentCategory == "Work Experience"
                               ? WorkExperienceFilter(
-                                  workExperienceRange:
-                                      _currentWorkExperienceRange,
-                                  onWorkExperienceChanged: (double value) {
-                                    setState(() {
-                                      _currentWorkExperienceRange = value;
-                                    });
-                                  },
-                                )
+                            workExperienceRange:
+                            _currentWorkExperienceRange,
+                            onWorkExperienceChanged: (double value) {
+                              setState(() {
+                                _currentWorkExperienceRange = value;
+                              });
+                            },
+                          )
                               : currentCategory == "Price"
-                                  ? PriceFilter(
-                                      sliderValue: _currentPriceSliderValue,
-                                      onSliderValueChanged: (double value) {
-                                        setState(() {
-                                          _currentPriceSliderValue = value;
-                                        });
-                                      },
-                                    )
-                                  : ListView.builder(
-                                      physics: const BouncingScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: filteredSubcategories.length,
-                                      itemBuilder: (context, index) {
+                              ? PriceFilter(
+                            sliderValue: _currentPriceSliderValue,
+                            onSliderValueChanged: (double value) {
+                              setState(() {
+                                _currentPriceSliderValue = value;
+                              });
+                            },
+                          )
+                              : ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: filteredSubcategories.length,
+                            itemBuilder: (context, index) {
 
-                                        log("filteredSubcategories...${filteredSubcategories.length}");
-                                        final subcategory =
-                                            filteredSubcategories[index];
-                                        return Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Checkbox(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(4)),
-                                              autofocus: true,
-                                              hoverColor: Colors.yellow,
-                                              splashRadius: null,
-                                              value: categorySelections[
-                                                      subcategory] ??
-                                                  false,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  categorySelections[
-                                                          subcategory] =
-                                                      value ?? false;
-                                                });
-                                              },
-                                            ),
-                                            Expanded(child: Text(subcategory)),
-                                          ],
-                                        );
-                                      },
-                                    ),
+                              log("filteredSubcategories...${filteredSubcategories.length}");
+                              final subcategory =
+                              filteredSubcategories[index];
+                              return Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.start,
+                                children: [
+                                  Checkbox(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(4)),
+                                    autofocus: true,
+                                    hoverColor: Colors.yellow,
+                                    splashRadius: null,
+                                    value: categorySelections[
+                                    subcategory] ??
+                                        false,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        categorySelections[
+                                        subcategory] =
+                                            value ?? false;
+                                      });
+                                    },
+                                  ),
+                                  Expanded(child: Text(subcategory)),
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -698,7 +682,3 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
     super.dispose();
   }
 }
-
-
-
-
