@@ -34,84 +34,98 @@ class FilteredDataScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Selected Filters'),
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: selectedData.entries.map((entry) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      entry.key,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: selectedData.entries.map((entry) {
+                  return SizedBox(
+                    width: double.infinity,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              entry.key,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            if (entry.value is List<String>)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: (entry.value as List<String>)
+                                    .map((subcategory) => Text('• $subcategory'))
+                                    .toList(),
+                              )
+                            else if (entry.key == 'Price')
+                              Text('• ₹${entry.value}')
+                            else if (entry.key == 'Work Experience')
+                                Text('• ${entry.value.toStringAsFixed(0)} years')
+                              else
+                                Text('• ${entry.value}'),
+                            const SizedBox(height: 10),
+                          ],
+                        ),
                       ),
                     ),
-                    if (entry.value is List<String>)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: (entry.value as List<String>)
-                            .map((subcategory) => Text('• $subcategory'))
-                            .toList(),
-                      )
-                    else if (entry.key == 'Price')
-                      Text('• ₹${entry.value}')
-                    else if (entry.key == 'Work Experience')
-                        Text('• ${entry.value.toStringAsFixed(0)} years')
-                      else
-                        Text('• ${entry.value}'),
-                    const SizedBox(height: 10),
-                  ],
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 20,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, {
-                      'selectedCategory': selectedCategory,
-                      'selectedRole': selectedRole,
-                      'selectedSkills': selectedSkills,
-                      'selectedCompanies': selectedCompanies,
-                      'selectedLocation': selectedLocation,
-                      'selectedPrice': selectedPrice,
-                      'selectedWorkExperience': selectedWorkExperience,
-                      'selectedLanguage': selectedLanguage,
-                      'selectedAvailableDays': selectedAvailableDays,
-                    });
-                  },
-                  child: const Text("EDIT"),
-                ),
-
-
-                ElevatedButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryFilterScreen(selectedCategory: [],
-                    selectedRole: [],
-                    selectedSkills: [],
-                    selectedCompanies: [],
-                    selectedLocation: [],
-                    selectedPrice: 0,
-                    selectedWorkExperience: 4,
-                    selectedLanguage: [],
-                    selectedAvailableDays: [],
-                  )));
-                }, child:const Text("SUBMIT"))
-              ],
-            )
-          ],
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.yellow,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context, {
+                        'selectedCategory': selectedCategory,
+                        'selectedRole': selectedRole,
+                        'selectedSkills': selectedSkills,
+                        'selectedCompanies': selectedCompanies,
+                        'selectedLocation': selectedLocation,
+                        'selectedPrice': selectedPrice,
+                        'selectedWorkExperience': selectedWorkExperience,
+                        'selectedLanguage': selectedLanguage,
+                        'selectedAvailableDays': selectedAvailableDays,
+                      });
+                    },
+                    child: const Text("EDIT", style: TextStyle(color: Colors.black),),
+                  ),
+        
+        
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.yellow,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                    ),
+                      onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryFilterScreen(selectedCategory: [],
+                      selectedRole: [],
+                      selectedSkills: [],
+                      selectedCompanies: [],
+                      selectedLocation: [],
+                      selectedPrice: 0,
+                      selectedWorkExperience: 4,
+                      selectedLanguage: [],
+                      selectedAvailableDays: [],
+                    )));
+                  }, child:const Text("SUBMIT", style: TextStyle(color: Colors.black),))
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

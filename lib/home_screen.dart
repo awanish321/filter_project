@@ -447,7 +447,7 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.yellow,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50))),
                   onPressed: () {
@@ -459,9 +459,9 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('Apply Filter',
-                          style: TextStyle(color: Colors.white)),
+                          style: TextStyle(color: Colors.black)),
                       SizedBox(width: 10),
-                      Icon(Icons.arrow_forward, color: Colors.white),
+                      Icon(Icons.arrow_forward, color: Colors.black),
                     ],
                   ),
                 ),
