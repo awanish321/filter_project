@@ -62,14 +62,14 @@ class _WorkExperienceFilterState extends State<WorkExperienceFilter> {
             ),
             child: Slider(
               value: _workExperienceRange,
-              min: 4.0, // Set min value to 4
+              min: 4.0,
               max: 30.0,
               divisions: null,
               label: '${_workExperienceRange.round()}',
               onChanged: (value) {
                 setState(() {
                   _workExperienceRange = value;
-                  _saveWorkExperienceRange(value); // Save the value
+                  _saveWorkExperienceRange(value);
                 });
               },
             ),

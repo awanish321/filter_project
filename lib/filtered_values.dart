@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'home_screen.dart';
 
 class FilteredDataScreen extends StatelessWidget {
@@ -27,8 +26,6 @@ class FilteredDataScreen extends StatelessWidget {
     required this.selectedLanguage,
     required this.selectedAvailableDays,
   });
-
-
 
 
   @override
@@ -81,49 +78,66 @@ class FilteredDataScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20,),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                  SizedBox(
+                    height: 40,
+                    width: 150,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.yellow,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CategoryFilterScreen(
+                              selectedCategory: selectedCategory,
+                              selectedRole: selectedRole,
+                              selectedSkills: selectedSkills,
+                              selectedCompanies: selectedCompanies,
+                              selectedLocation: selectedLocation,
+                              selectedPrice: selectedPrice,
+                              selectedWorkExperience: selectedWorkExperience,
+                              selectedLanguage: selectedLanguage,
+                              selectedAvailableDays: selectedAvailableDays,
+                            ),
+                          ),
+                        );
+
+
+                      },
+                      child: const Text("EDIT", style: TextStyle(color: Colors.black),),
                     ),
-                    onPressed: () {
-                      Navigator.pop(context, {
-                        'selectedCategory': selectedCategory,
-                        'selectedRole': selectedRole,
-                        'selectedSkills': selectedSkills,
-                        'selectedCompanies': selectedCompanies,
-                        'selectedLocation': selectedLocation,
-                        'selectedPrice': selectedPrice,
-                        'selectedWorkExperience': selectedWorkExperience,
-                        'selectedLanguage': selectedLanguage,
-                        'selectedAvailableDays': selectedAvailableDays,
-                      });
-                    },
-                    child: const Text("EDIT", style: TextStyle(color: Colors.black),),
                   ),
-        
-        
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
-                    ),
-                      onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryFilterScreen(selectedCategory: [],
-                      selectedRole: [],
-                      selectedSkills: [],
-                      selectedCompanies: [],
-                      selectedLocation: [],
-                      selectedPrice: 0,
-                      selectedWorkExperience: 4,
-                      selectedLanguage: [],
-                      selectedAvailableDays: [],
-                    )));
-                  }, child:const Text("SUBMIT", style: TextStyle(color: Colors.black),))
+
+                  const SizedBox(width: 20),
+
+                  // SizedBox(
+                  //   height: 40,
+                  //   width: 150,
+                  //   child: ElevatedButton(
+                  //     style: ElevatedButton.styleFrom(
+                  //       backgroundColor: Colors.yellow,
+                  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                  //     ),
+                  //       onPressed: (){
+                  //     Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryFilterScreen(selectedCategory: [],
+                  //       selectedRole: [],
+                  //       selectedSkills: [],
+                  //       selectedCompanies: [],
+                  //       selectedLocation: [],
+                  //       selectedPrice: 0,
+                  //       selectedWorkExperience: 4,
+                  //       selectedLanguage: [],
+                  //       selectedAvailableDays: [],
+                  //     )));
+                  //   }, child:const Text("SUBMIT", style: TextStyle(color: Colors.black),)),
+                  // )
                 ],
-              )
+              ),
+              const SizedBox(height: 10,)
             ],
           ),
         ),
