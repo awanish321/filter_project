@@ -108,33 +108,11 @@ class FilteredDataScreen extends StatelessWidget {
 
 
                       },
-                      child: const Text("EDIT", style: TextStyle(color: Colors.black),),
+                      child: const Text("SUBMIT", style: TextStyle(color: Colors.black),),
                     ),
                   ),
 
                   const SizedBox(width: 20),
-
-                  // SizedBox(
-                  //   height: 40,
-                  //   width: 150,
-                  //   child: ElevatedButton(
-                  //     style: ElevatedButton.styleFrom(
-                  //       backgroundColor: Colors.yellow,
-                  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
-                  //     ),
-                  //       onPressed: (){
-                  //     Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryFilterScreen(selectedCategory: [],
-                  //       selectedRole: [],
-                  //       selectedSkills: [],
-                  //       selectedCompanies: [],
-                  //       selectedLocation: [],
-                  //       selectedPrice: 0,
-                  //       selectedWorkExperience: 4,
-                  //       selectedLanguage: [],
-                  //       selectedAvailableDays: [],
-                  //     )));
-                  //   }, child:const Text("SUBMIT", style: TextStyle(color: Colors.black),)),
-                  // )
                 ],
               ),
               const SizedBox(height: 10,)
