@@ -4,6 +4,7 @@ import 'package:filter/price.dart';
 import 'package:filter/work_experience.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'filtered_values.dart';
 
 class CategoryFilterScreen extends StatefulWidget {
@@ -174,10 +175,10 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
   List<String> selectedCompanies = [];
   List<String> selectedLocation = [];
   double selectedPrice = 0;
-  double selectedWorkExperience = 0;
+  double selectedWorkExperience = 4;
   List<String> selectedLanguage = [];
   List<String> selectedAvailableDays = [];
-
+  final GlobalKey<_CategoryFilterScreenState> _key = GlobalKey();
 
   @override
   void initState() {
@@ -193,28 +194,25 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
     selectedLanguage = widget.selectedLanguage;
     selectedAvailableDays = widget.selectedAvailableDays;
 
-    // Initialize selectedSubcategories after initializing the respective fields
+    _currentPriceSliderValue = selectedPrice;
+    _currentWorkExperienceRange = selectedWorkExperience;
+
+    // Initialize selectedSubcategories with the correct values for "Price" and "Work Experience"
     selectedSubcategories = {
       'Category': selectedCategory.asMap().map((key, value) => MapEntry(value, true)),
       'Role': selectedRole.asMap().map((key, value) => MapEntry(value, true)),
       'Skills': selectedSkills.asMap().map((key, value) => MapEntry(value, true)),
       'Companies': selectedCompanies.asMap().map((key, value) => MapEntry(value, true)),
       'Location': selectedLocation.asMap().map((key, value) => MapEntry(value, true)),
+      'Price': {selectedPrice.toString(): true},
+      'Work Experience': {selectedWorkExperience.toString(): true},
       'Language': selectedLanguage.asMap().map((key, value) => MapEntry(value, true)),
       'Available Days': selectedAvailableDays.asMap().map((key, value) => MapEntry(value, true)),
     };
 
-    // Initialize the Price and Work Experience subcategories separately
-    selectedSubcategories['Price'] = {
-      selectedPrice.toString(): true,
-    };
-    selectedSubcategories['Work Experience'] = {
-      selectedWorkExperience.toString(): true,
-    };
-
     // Fetch data from Firestore
     _fetchCategoryFromFirestore().then((_) {
-      // Call categoryFetch after fetching the category data
+      // Call categoryFetch after fetching the category data and initializing selectedSubcategories
       categoryFetch();
     });
     _fetchRolesFromFirestore();
@@ -355,16 +353,6 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
         categorySelections
             .clear(); // Clear categorySelections for all categories
       }
-
-      // Set price to zero if current category is "Price"
-      if (currentCategory == "Price") {
-        _currentPriceSliderValue = 0;
-      }
-
-      // Set work experience to zero if current category is "Work Experience"
-      if (currentCategory == "Work Experience") {
-        _currentWorkExperienceRange = 4;
-      }
     });
   }
 
@@ -393,6 +381,7 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
         .where((entry) => entry.value)
         .map((entry) => entry.key)
         .toList();
+
     selectedRole = selectedSubcategories['Role']!
         .entries
         .where((entry) => entry.value)
@@ -424,13 +413,10 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
         .map((entry) => entry.key)
         .toList();
 
-    // Set selected price
+    // Update selectedPrice and selectedWorkExperience with the current values
     selectedPrice = _currentPriceSliderValue;
-
-    // Set selected work experience
     selectedWorkExperience = _currentWorkExperienceRange;
 
-    // Pass selected data to the next screen
     Map<String, dynamic> selectedData = {
       'Category': selectedCategory,
       'Role': selectedRole,
@@ -461,6 +447,8 @@ class _CategoryFilterScreenState extends State<CategoryFilterScreen> {
       ),
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
