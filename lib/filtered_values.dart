@@ -90,7 +90,7 @@ class FilteredDataScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => CategoryFilterScreen(
-                          selectedCategory: selectedCategory,
+                          // selectedCategory: selectedCategory,
                           selectedRole: selectedRole,
                           selectedSkills: selectedSkills,
                           selectedCompanies: selectedCompanies,
@@ -98,7 +98,7 @@ class FilteredDataScreen extends StatelessWidget {
                           selectedPrice: selectedPrice,
                           selectedWorkExperience: selectedWorkExperience,
                           selectedLanguage: selectedLanguage,
-                          selectedAvailableDays: selectedAvailableDays,
+                          selectedAvailableDays: selectedAvailableDays, selectedCategory: '',
                         ),
                       ),
                     );
