@@ -41,16 +41,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: false
       ),
-      // home: const CategoryFilterScreen(selectedCategory: [],
-      //   selectedRole: [],
-      //   selectedSkills: [],
-      //   selectedCompanies: [],
-      //   selectedLocation: [],
-      //   selectedPrice: 0,
-      //   selectedWorkExperience: 4,
-      //   selectedLanguage: [],
-      //   selectedAvailableDays: [],
-      // ),
       home: const CategoryScreen(),
     );
   }

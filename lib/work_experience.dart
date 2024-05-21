@@ -24,13 +24,6 @@ class _WorkExperienceFilterState extends State<WorkExperienceFilter> {
     _workExperienceRange = widget.workExperienceRange;
   }
 
-  _loadWorkExperienceRange() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _workExperienceRange = prefs.getDouble('workExperienceRange') ?? 4;
-    });
-  }
-
   _saveWorkExperienceRange(double value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setDouble('workExperienceRange', value);

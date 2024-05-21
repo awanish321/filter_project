@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 
 class FilteredDataScreen extends StatelessWidget {
-
   final Map<String, dynamic> selectedData;
   final List<String> selectedCategory;
   final List<String> selectedRole;
